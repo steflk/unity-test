@@ -16,12 +16,6 @@ public class PlayerController : MonoBehaviour
     private float walkingSpeed;
     private Animator anim;
 
-    private readonly int hashSpeedPara = Animator.StringToHash("Speed");
-    private readonly int hashRunPara = Animator.StringToHash("WalkToRun");
-    private readonly int hashWalkPara = Animator.StringToHash("RunToWalk");
-    private readonly int hashWalkingTag = Animator.StringToHash("Walking");
-    private readonly int hashRunningTag = Animator.StringToHash("Running");
-
     // Use this for initialization
     private void Start ()
     {
@@ -31,7 +25,7 @@ public class PlayerController : MonoBehaviour
 	}
 
     // Update is called once per frame
-    private void Update ()
+    private void Update()
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
@@ -44,30 +38,28 @@ public class PlayerController : MonoBehaviour
 
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, boundary.xMin, boundary.xMax), 0.0f, Mathf.Clamp(transform.position.z, boundary.zMin, boundary.zMax));
 
-        anim.SetFloat(hashSpeedPara, vertical);
-
-        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && 
-            (anim.GetCurrentAnimatorStateInfo(0).tagHash == hashWalkingTag || anim.GetCurrentAnimatorStateInfo(0).tagHash == hashRunningTag))
+        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S)) && !Input.GetKey(KeyCode.LeftShift))
         {
-            Running();
+            anim.SetBool("isIdle", false);
+            anim.SetBool("isWalking", true);
+            anim.SetBool("isRunning", false);
+            speed = walkingSpeed;
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftShift) | Input.GetKeyUp(KeyCode.RightShift))
+        else if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
         {
-            Walking();
+            anim.SetBool("isIdle", false);
+            anim.SetBool("isWalking", false);
+            anim.SetBool("isRunning", true);
+            speed = runningSpeed;
         }
-	}
 
-    private void Running()
-    {
-        anim.SetTrigger(hashRunPara);
-        speed = runningSpeed;
+        else if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S))
+        {
+            anim.SetBool("isIdle", true);
+            anim.SetBool("isWalking", false);
+            anim.SetBool("isRunning", false);
+            speed = 0;
+        }
     }
-
-    private void Walking()
-    {
-        anim.SetTrigger(hashWalkPara);
-        speed = walkingSpeed;
-    }
-
 }
