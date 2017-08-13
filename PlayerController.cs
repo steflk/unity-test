@@ -9,9 +9,10 @@ public class Boundary
 public class PlayerController : MonoBehaviour
 {
     public float speed;
-    public float rotationSpeed;
+    public int currentThirst;
     public Boundary boundary;
-
+    
+    private float rotationSpeed;
     private float runningSpeed;
     private float walkingSpeed;
     private Animator anim;
@@ -20,8 +21,12 @@ public class PlayerController : MonoBehaviour
     private void Start ()
     {
         anim = GetComponent<Animator>();
+        rotationSpeed = 50.0f;
         walkingSpeed = speed;
         runningSpeed = speed * 2;
+        currentThirst = 100;
+
+        InvokeRepeating("StatusBars", 3.0f, 3.0f);
 	}
 
     // Update is called once per frame
@@ -61,5 +66,10 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("isRunning", false);
             speed = 0;
         }
+    }
+
+    private void StatusBars()
+    {
+        currentThirst = currentThirst - 1;
     }
 }
