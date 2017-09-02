@@ -5,7 +5,6 @@ using UnityEngine;
 public class InteractCollider : MonoBehaviour {
 
     public GUIText interactMessage;
-    public Transform target;
 
     private bool isClose;
     private bool interacted;
@@ -29,8 +28,14 @@ public class InteractCollider : MonoBehaviour {
         if (isClose == true && Input.GetKeyDown(KeyCode.E) && interacted == false)
         {
             interacted = true;
-            transform.LookAt(target);
-            StartCoroutine(interactionScript.DrinkInteract(interactMessage));
+            if (gameObject.tag == "Drink")
+            {
+                StartCoroutine(interactionScript.DrinkInteract(interactMessage));
+            }
+            else if (gameObject.tag == "Eat")
+            {
+                StartCoroutine(interactionScript.EatInteract(interactMessage));
+            }
         }
         else if (isClose == false)
         {
